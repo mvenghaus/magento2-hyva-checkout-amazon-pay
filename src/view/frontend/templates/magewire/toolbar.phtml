@@ -1,0 +1,29 @@
+<?php
+
+declare(strict_types=1);
+
+use Hyva\Theme\Model\ViewModelRegistry;
+use Hyva\AmazonPay\ViewModel\AmazonPayCheckoutViewModel;
+
+/** @var ViewModelRegistry $viewModels */
+
+$amazonPayCheckoutViewModel = $viewModels->require(AmazonPayCheckoutViewModel::class);
+?>
+<?php if ($amazonPayCheckoutViewModel->isCheckoutActive()): ?>
+    <div class="md:flex md:items-center gap-y-2 md:gap-x-2 w-full bg-gray-100 p-2 mb-4 rounded-lg">
+        <div class="text-xl md:ml-4 mr-8 mb-2 md:mb-0">Amazon Pay</div>
+        <button type="button"
+                class="btn btn-primary mb-2 md:mb-0"
+                wire:click="backToStandard"
+
+        ><?= __('Back to standard checkout') ?></button>
+
+        <button type="button"
+                class="btn btn-secondary"
+                wire:click="changeAmazonInformation"
+
+        ><?= __('Change your address or payment') ?></button>
+    </div>
+<?php else: ?>
+    <div></div>
+<?php endif; ?>

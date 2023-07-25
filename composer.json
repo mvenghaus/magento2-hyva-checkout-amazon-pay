@@ -1,0 +1,28 @@
+{
+  "name": "mvenghaus/magento2-hyva-checkout-amazon-pay",
+  "description": "Hyvä Compatibility module for Amazon_Pay",
+  "type": "magento2-module",
+  "require": {
+    "php": "^8.2.0",
+    "magento/framework": "*",
+    "hyva-themes/magento2-compat-module-fallback": "*",
+    "hyva-themes/magento2-default-theme": "^1.2.0",
+    "hyva-themes/magento2-hyva-checkout": "^1.0.2",
+    "amzn/amazon-pay-magento-2-module": "^5.16.0"
+  },
+  "authors": [
+    {
+      "name": "Marcus Venghaus",
+      "email": "info@inklammern.de"
+    }
+  ],
+  "license": "see LICENSE.md",
+  "autoload": {
+    "files": [
+      "src/registration.php"
+    ],
+    "psr-4": {
+      "Hyva\\AmazonPay\\": "src/"
+    }
+  }
+}

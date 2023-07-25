@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <type name="Hyva\CompatModuleFallback\Model\CompatModuleRegistry">
+        <arguments>
+            <argument name="compatModules" xsi:type="array">
+                <item name="hyva-hyva-checkout-amazon-pay" xsi:type="array">
+                    <item name="original_module" xsi:type="string">Amazon_Pay</item>
+                    <item name="compat_module" xsi:type="string">Hyva_AmazonPay</item>
+                </item>
+            </argument>
+        </arguments>
+    </type>
+
+    <!-- Place order handler -->
+    <type name="Hyva\Checkout\Model\Magewire\Payment\PlaceOrderServiceProvider">
+        <arguments>
+            <argument name="placeOrderServiceList" xsi:type="array">
+                <item name="amazon_payment_v2" xsi:type="object">
+                    Hyva\AmazonPay\Model\Magewire\Payment\PlaceOrderService
+                </item>
+            </argument>
+        </arguments>
+    </type>
+
+    <!-- Set static urls -->
+    <type name="Hyva\AmazonPay\Model\AmazonPayCheckout">
+        <arguments>
+            <argument name="paymentRegionStaticUrls" xsi:type="array">
+                <item name="de" xsi:type="string">https://static-eu.payments-amazon.com/</item>
+                <item name="uk" xsi:type="string">https://static-eu.payments-amazon.com/</item>
+                <item name="jp" xsi:type="string">https://static-fe.payments-amazon.com/</item>
+                <item name="us" xsi:type="string">https://static-na.payments-amazon.com/</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <!-- Always show form instead of address list (better for validation) -->
+    <type name="Hyva\Checkout\ViewModel\Checkout\AddressView\AddressViewShipping">
+        <plugin name="Hyva_Checkout_ViewModel_Checkout_AddressView_AddressViewShipping"
+                type="Hyva\AmazonPay\Plugin\Hyva\Checkout\ViewModel\Checkout\AddressView\AddressViewShippingPlugin"/>
+    </type>
+
+    <!-- Handle visible payment methods -->
+    <type name="Hyva\Checkout\ViewModel\Checkout\Payment\Method">
+        <plugin name="Hyva_Checkout_ViewModel_Checkout_Payment_Method"
+                type="Hyva\AmazonPay\Plugin\Hyva\Checkout\ViewModel\Checkout\Payment\MethodPlugin"/>
+    </type>
+</config>

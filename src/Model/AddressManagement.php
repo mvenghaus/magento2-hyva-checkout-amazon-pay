@@ -25,5 +25,19 @@ class AddressManagement
             ->setCountryId($amazonShippingAddressData['country_id'] ?? '')
             ->setTelephone($amazonShippingAddressData['telephone'] ?? '')
             ->setSameAsBilling(true);
+
+        $quote
+            ->getBillingAddress()
+            ->setCustomerId($customer->getId())
+            ->setCompany($amazonShippingAddressData['company'] ?? '')
+            ->setFirstname($amazonShippingAddressData['firstname'] ?? '')
+            ->setLastname($amazonShippingAddressData['lastname'] ?? '')
+            ->setStreet($amazonShippingAddressData['street'] ?? '')
+            ->setPostcode($amazonShippingAddressData['postcode'] ?? '')
+            ->setCity($amazonShippingAddressData['city'] ?? '')
+            ->setRegion($amazonData['region'] ?? '')
+            ->setRegionId((int)($amazonData['region_id'] ?? ''))
+            ->setCountryId($amazonShippingAddressData['country_id'] ?? '')
+            ->setTelephone($amazonShippingAddressData['telephone'] ?? '');
     }
 }

@@ -14,6 +14,8 @@ $amazonPayCheckoutViewModel = $viewModels->require(AmazonPayCheckoutViewModel::c
 $amazonPayRendererViewModel = $viewModels->require(AmazonPayRendererViewModel::class);
 
 $elementId = 'amazon_pay_button_' . uniqid();
+$elementId = 'amazon_pay_button'; // tmp fixed id because of magewire
+
 
 ?>
 <div x-data="initAmazonPayButton()"

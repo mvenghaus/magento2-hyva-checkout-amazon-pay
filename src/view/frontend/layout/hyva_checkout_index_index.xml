@@ -4,6 +4,7 @@
 >
     <body>
         <referenceContainer name="hyva.checkout.container">
+            <block template="Hyva_AmazonPay::js.phtml" />
             <block name="hyva.checkout.amazon_pay.toolbar" before="-">
                 <arguments>
                     <argument name="magewire" xsi:type="object">

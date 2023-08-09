@@ -1,0 +1,103 @@
+<?php
+
+declare(strict_types=1);
+
+use Hyva\AmazonPay\Block\PayButton;
+use Hyva\AmazonPay\ViewModel\AmazonPayCheckoutViewModel;
+use Hyva\AmazonPay\ViewModel\AmazonPayRendererViewModel;
+use Hyva\Theme\Model\ViewModelRegistry;
+
+/** @var PayButton $block */
+/** @var ViewModelRegistry $viewModels */
+
+$amazonPayCheckoutViewModel = $viewModels->require(AmazonPayCheckoutViewModel::class);
+$amazonPayRendererViewModel = $viewModels->require(AmazonPayRendererViewModel::class);
+
+$elementId = 'amazon_pay_button_' . uniqid();
+$elementId = 'amazon_pay_button'; // tmp fixed id because of magewire
+
+?>
+
+<script>
+    function initAmazonPayButton() {
+        return {}
+    }
+</script>
+
+<script <?= $amazonPayRendererViewModel->renderScriptAttributes() ?>>
+    function initAmazonPayButton() {
+        return {
+            config: <?= json_encode($amazonPayCheckoutViewModel->getCheckoutSessionConfig()) ?>,
+
+            init() {
+                if (this.hasCartItems()) {
+                    this.createButton();
+                }
+            },
+
+            createButton() {
+                this.loadScript()
+                    .then(() => {
+                        const config = this.config[0];
+
+                        if (typeof amazon === 'undefined') {
+                            return;
+                        }
+
+                        amazon.Pay.renderButton(
+                            '#<?= $elementId ?>',
+                            {
+                                merchantId: config['merchant_id'],
+                                ledgerCurrency: config['currency'],
+                                sandbox: config['sandbox'],
+                                checkoutLanguage: config['language'],
+                                productType: 'PayAndShip',
+                                placement: 'Cart',
+                                buttonColor: config["button_color"],
+                                createCheckoutSessionConfig: {
+                                    payloadJSON: config['checkout_payload'],
+                                    signature: config['checkout_signature'],
+                                    publicKeyId: config['public_key_id']
+                                }
+                            }
+                        );
+                    });
+            },
+
+            hasCartItems() {
+                const browserStorage = hyva.getBrowserStorage();
+                if (browserStorage) {
+                    const mageStorage = JSON.parse(browserStorage['mage-cache-storage'])
+                    if (mageStorage.cart.items && mageStorage.cart.items.length) {
+                        return true;
+                    }
+                }
+
+                return false;
+            },
+
+            loadScript() {
+                return new Promise((resolve, reject) => {
+                    let script = document.getElementById('amazon-pay-script');
+                    if (script) {
+                        return resolve(script);
+                    }
+
+                    script = document.createElement('script');
+                    script.src = '<?= $amazonPayCheckoutViewModel->getStaticUrl() ?>checkout.js';
+                    script.id = 'amazon-pay-script';
+
+                    script.addEventListener("load", () => {
+                        resolve(script);
+                    }, false);
+
+                    script.addEventListener("error", () => {
+                        reject(script);
+                    }, false);
+
+                    document.body.appendChild(script);
+                });
+            }
+        }
+    }
+</script>
